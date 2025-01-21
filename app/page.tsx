@@ -11,11 +11,14 @@ import { motion } from "framer-motion"
 export default function Home() {
   const [courses, setCourses] = useState<Course[]>([])
   const [coursework, setCoursework] = useState<Coursework[]>([])
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     seedCourses()
-    setCourses(localStorage.getCourses())
+    const existingCourses = localStorage.getCourses()
+    setCourses(existingCourses)
     setCoursework(localStorage.getCoursework())
+    setIsLoaded(true)
   }, [])
 
   const calculateCourseProgress = (courseId: string) => {
@@ -34,6 +37,17 @@ export default function Home() {
       score: totalPercentage > 0 ? courseScore : 0,
       percentageGraded: totalPercentage
     }
+  }
+
+  if (!isLoaded) {
+    return (
+      <div className="container mx-auto p-4 max-w-screen-lg">
+        <div className="text-3xl font-semibold mb-8 text-gray-900">
+          Courses
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4" />
+      </div>
+    )
   }
 
   return (
